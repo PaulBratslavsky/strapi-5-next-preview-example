@@ -17,6 +17,7 @@ function getPreviewPath(contentType: string | undefined, slug: string | null, lo
 }
 
 export const GET = async (request: Request) => {
+  // Parse query string parameters
   const { searchParams } = new URL(request.url);
   const secret = searchParams.get('secret');
   const slug = searchParams.get('slug');
@@ -24,6 +25,7 @@ export const GET = async (request: Request) => {
   const uid = searchParams.get('uid');
   const status = searchParams.get('status');
 
+  // Check the secret and next parameters
   if (secret !== process.env.PREVIEW_SECRET) {
     return new Response('Invalid token', { status: 401 });
   }
@@ -31,7 +33,10 @@ export const GET = async (request: Request) => {
   const contentType = uid?.split(".").pop();
   const finalPath = getPreviewPath(contentType, slug, locale, status);
 
+  // Enable Draft Mode by setting the cookie
   const draft = await draftMode();
   status === 'draft' ? draft.enable() : draft.disable();
+
+  // Redirect to the path from the fetched post
   redirect(finalPath);
 };

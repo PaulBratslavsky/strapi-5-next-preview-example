@@ -1,6 +1,7 @@
 import React from "react";
 import qs from "qs";
 
+import { draftMode } from "next/headers";
 import { Metadata } from "next";
 import { formatDate, getStrapiURL } from "@/lib/utils";
 import { StrapiImage } from "@/components/strapi-image";
@@ -14,6 +15,7 @@ async function loader(slug: string, status?: string) {
   const baseUrl = getStrapiURL();
 
   const url = new URL(path, baseUrl);
+
   url.search = qs.stringify({
     populate: {
       cover: {
@@ -35,6 +37,7 @@ async function loader(slug: string, status?: string) {
     },
     status: status,
   });
+
   const data = await fetchData(url.href);
   console.dir(data, { depth: null });
   return data;
@@ -42,22 +45,17 @@ async function loader(slug: string, status?: string) {
 
 interface Props {
   params: { slug: string };
-  searchParams: { [key: string]: string | string[] | undefined };
 }
 
-export async function generateMetadata({ 
-  params, 
-  searchParams 
-}: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const resolvedParams = await params;
-  const resolvedSearchParams = await searchParams;
-
+  const { isEnabled: isDraftMode } = await draftMode();
+  const status = isDraftMode ? "draft" : "published";
   const slug = resolvedParams.slug;
-  const status = resolvedSearchParams.status;
 
   const data = await loader(slug, status as string);
   const post = data?.data[0];
-  
+
   if (!post) notFound();
 
   return {
@@ -76,17 +74,17 @@ function BlockRenderer(block: Block, index: number) {
 }
 
 export default async function SinglePost(props: Props) {
+  const { isEnabled: isDraftMode } = await draftMode();
+  const status = isDraftMode ? "draft" : "published";
+
   const resolvedParams = await props.params;
-  const resolvedSearchParams = await props.searchParams;
-  
   const slug = resolvedParams.slug;
-  const status = resolvedSearchParams.status;
 
   const data = await loader(slug, status as string);
   const post = data?.data[0];
   const blocks = post?.blocks;
 
-  if (!post) return null;
+  if (!post) return notFound();
 
   return (
     <article>
