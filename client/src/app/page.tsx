@@ -57,7 +57,7 @@ const mockHomeData = {
         image: {
           id: 17,
           documentId: "sg6vq9j5il16fl8y38dob4c8",
-          url: "/uploads/strapi_dashboard_d4cf37208d.png",
+          url: "/uploads/coffee_beans_204b6e4e5a.jpeg",
           alternativeText: null,
           name: "strapi-dashboard.png",
         },
@@ -126,7 +126,7 @@ const mockHomeData = {
         image: {
           id: 17,
           documentId: "sg6vq9j5il16fl8y38dob4c8",
-          url: "/uploads/strapi_dashboard_d4cf37208d.png",
+          url: "/uploads/coffee_beans_204b6e4e5a.jpeg",
           alternativeText: null,
           name: "strapi-dashboard.png",
         },
@@ -141,7 +141,7 @@ const mockHomeData = {
         image: {
           id: 16,
           documentId: "snfaonozn0smii9nl04dd1hg",
-          url: "/uploads/strapi_cloud_b6acd875d2.png",
+          url: "/uploads/coffee_beans_204b6e4e5a.jpeg",
           alternativeText: null,
           name: "strapi-cloud.png",
         },
